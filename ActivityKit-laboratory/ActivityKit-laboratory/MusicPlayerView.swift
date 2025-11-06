@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  MusicPlayerView.swift
 //  ActivityKit-laboratory
 //
 //  Created by Hollins, Cecilia on 19/3/2023.
@@ -8,7 +8,9 @@
 import SwiftUI
 import AppIntents
 
-struct ContentView: View {
+struct MusicPlayerView: View {
+    
+    @State var viewModel = MusicPlayerViewModel()
         
     // Access the defaults group data with the @AppStorage macro
     // Add the store argument to specify access to the app group instead of the regular User Defaults
@@ -60,7 +62,16 @@ struct ContentView: View {
         VStack(spacing: 20) {
             ForEach(SeventiesPlaylist.songs, id: \.songTitle) { song in
                 let i = SeventiesPlaylist.songs.firstIndex(of: song) ?? 0
-                Button(intent: PlaySelectedSongIntent(song: i)) {
+                Button {
+                    let intent = PlaySelectedSongIntent(song: i)
+                    Task {
+                        // Execute the intent logic
+                        _ = try? await intent.perform()
+                        
+                        // Start the live activity
+                        viewModel.startLiveActivity(song: song)
+                    }
+                } label: {
                     HStack {
                         Image(song.albumCover)
                             .resizable()
@@ -138,8 +149,8 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct MusicPlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        MusicPlayerView()
     }
 }

@@ -61,6 +61,7 @@ extension MusicPlayerLiveActivity {
                     .invalidatableContent()
             }
             .fixedSize(horizontal: true, vertical: false)
+            .padding(.top, 20)
         }
     }
     

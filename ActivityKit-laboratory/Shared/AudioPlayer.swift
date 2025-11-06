@@ -39,6 +39,7 @@ class AudioPlayer: NSObject, AVAudioPlayerDelegate {
     }
     
     func play() {
+        audioPlayer.prepareToPlay()
         audioPlayer.play()
     }
     

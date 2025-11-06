@@ -15,7 +15,7 @@ struct MusicPlayerAppGroup {
     static var audioPlayer = AudioPlayer(songHasFinished: nextSong)
     
     // Add the name of the created App Group. This value should be the same value as what was created in 'Signing and Capabilities' tab.
-    private static let appGroup = ""
+    private static let appGroup = "group.com.hollinscecilia.activitykit-laboratory"
     
     // Create the defaults group
     static let defaultsGroup = UserDefaults(suiteName: appGroup)
