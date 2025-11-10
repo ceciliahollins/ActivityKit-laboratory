@@ -26,6 +26,7 @@ final class MusicPlayerViewModel: ObservableObject {
                     currSong: song,
                     secondsLeftInSong: 0,
                 )
+                activityViewState = initialState
                 
                 // Create the activity content with the initial state
                 // If staleDate is nil, the live activity will continue until the OS stops it
@@ -41,8 +42,8 @@ final class MusicPlayerViewModel: ObservableObject {
                     content: content,
                     pushType: nil)
                 
-                activityViewState = initialState
-                
+                // Begin observing actvitiy
+                observeLiveActivity(activity: currentActivity!)
                 
             } catch {
                 print("Couldn't start activity: \(error)")
@@ -73,5 +74,33 @@ final class MusicPlayerViewModel: ObservableObject {
         // Update the live activity with the content state and the alert configuration
         await activity.update(ActivityContent(state: contentState, staleDate: Date.now + 15),
                               alertConfiguration: alertConfig)
+    }
+    
+    // There are 4 states a live activity can be in: started, finished, dismissed and stale
+    // Use this function to observe those states and act accordinly
+    func observeLiveActivity(activity: Activity<MusicPlayerAttributes>) {
+        
+        Task {
+            for await activityState in activity.activityStateUpdates {
+                
+                if activityState == .dismissed {
+                    self.activityViewState = nil
+                    self.currentActivity = nil
+                }
+            }
+        }
+    }
+    
+    // Use this to complete end the activity
+    // The actvitiy can either be dismissed immediatly or after a specified time interval, to show final detail to the user for some time before ending
+    func endLiveActivity() async {
+        
+        guard let activity = currentActivity,
+              let viewState = activityViewState else {
+            return
+        }
+        
+        let dismissalPolicy: ActivityUIDismissalPolicy = .immediate
+        await activity.end(ActivityContent(state: viewState, staleDate: nil), dismissalPolicy: dismissalPolicy)
     }
 }
