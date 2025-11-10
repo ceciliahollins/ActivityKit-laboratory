@@ -57,7 +57,7 @@ struct MusicPlayerLiveActivity_Previews: PreviewProvider {
     static let attributes = MusicPlayerAttributes(name: "MusicPlayer")
     static let contentState = MusicPlayerAttributes.ContentState(
         currSong: SeventiesPlaylist.songs.first!,
-        playlistName: "Seventies playlist"
+        secondsLeftInSong: 0
     )
 
     static var previews: some View {

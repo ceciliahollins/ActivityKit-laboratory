@@ -37,6 +37,11 @@ struct MusicPlayerView: View {
                 }
             }
         }
+        .onChange(of: currSong) { oldValue, newValue in
+            Task {
+                await viewModel.updateLiveActivity(song: SeventiesPlaylist.songs[currSong])
+            }
+        }
     }
     
     var playlistHeader: some View {
